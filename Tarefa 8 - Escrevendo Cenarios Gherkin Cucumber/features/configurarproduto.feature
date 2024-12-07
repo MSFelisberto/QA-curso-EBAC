@@ -1,5 +1,8 @@
 #language: pt
 
+#Quando possuimos algum cenário que demanda muitos Given(Dado), And(E) e Then(Entao) podemos utilizar um asterisco(*) para mantermos a fluidez do documento, deixando-o mais facil de ler.
+#https://cucumber.io/docs/gherkin/reference/
+
   Funcionalidade: Configurar Produto
 
     Como cliente da EBAC-SHOP
@@ -7,32 +10,42 @@
     E escolher a quantidade
     Para depois inserir no carrinho
 
-  Contexto:
-    Dado que estou na pagina do produto
+    Contexto:
+        Dado que estou na página de configuração do produto
 
 
-  Cenario: Configuro o produto de forma valida
-    Dado escolho o tamanho do produto
-    E escolho a cor do produto
-    E escolho a quantidade do produto
-    Quando clicar no botão comprar
-    Entao o produto deve ser adicionado no carrinho
-
-  Cenario: Configuro o produto de forma incorreta
-    Dado escolho o tamanho do produto
-    Quando tentar clicar no botão comprar
-    Entao o botão comprar não permitirá adicionar o produto no carrinho
-
-
-  Cenario: Tento adicionar mais do que dez produtos no carrinho
-    Dado adiciono dez produtos no carrinho
-    Quando tento adicionar o decimo primeiro produto no carrinho
-    Entao deve apresentar um alerta de erro impedindo a adição no carrinho
+    Esquema do Cenário: Configuração do produco de a cordo com meu gosto e tamanho
+        Quando clico no botão selecionar <opcao>
+        Então o sistema deve manter selecionado <opcao> do produto
+            E com o botão comprar deve ficar destacado
+       
+        
+        Exemplos:
+            | opcao              |
+            | cor                |
+            | tamanho            |
+            | quantidade_produto |
 
 
-  Cenario: Limpo a configuração do produto
-    Dado escolho o tamho do produto
-    E escolho a cor do produto
-    E escolho a quantidade do produto
-    Quando clicar no botão limpar
-    Entao todas as configurações do produto devem ser limpas
+
+    Esquema do Cenário: Seleção de produtos com tamanho e cor diferentes
+        Quando seleciono uma blusa da cor <cor>
+            E tamanho <tamanho>
+            * adiciono a quantidade <quantidade>
+        Então o sistema deve acescentar o produto no carrinho
+
+        Exemplos:
+            | cor      | tamanho | quantidade |
+            | azul     | M       | 1          |
+            | azul     | G       | 2          |
+            | azul     | GG      | 3          |
+            | vermelho | M       | 1          |
+            | amarelo  | G       | 2          |
+            | verde    | GG      | 3          |
+
+    Cenário: limpar configuração do produto selecionado
+        Quando clico no botão limpar configuração
+        Então o sistema deve limpar a configuração do produto
+            E a quantidade do produto deve ser 1
+            * a cor do produto não deve estar selecionada
+            * o tamanho do produto não deve estar selecionado
